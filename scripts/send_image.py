@@ -32,6 +32,9 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 # CLIENT_CRT = os.path.join(SECRETS_DIR, "web.crt")
 # CLIENT_KEY = os.path.join(SECRETS_DIR, "web.key")
 
+# Global variable to track the photo message ID
+photo_mid = None
+
 def get_local_ip():
     """Get the local IP address of this machine"""
     try:
@@ -71,6 +74,7 @@ def load_image_from_file(path):
         sys.exit(1)
 
 def on_connect(client, userdata, flags, rc):
+    global photo_mid
     if rc == 0:
         print("Connected to MQTT Broker!")
         
@@ -100,15 +104,15 @@ def on_connect(client, userdata, flags, rc):
             print("Sending generated test image (no file argument provided)")
             image_data = create_test_image()
 
-        client.publish(PHOTO_TOPIC, image_data)
+        result = client.publish(PHOTO_TOPIC, image_data)
+        photo_mid = result.mid
     else:
         print(f"Failed to connect, return code {rc}")
         sys.exit(1)
 
 def on_publish(client, userdata, mid):
-    # Disconnect after second publish (the photo)
-    # Note: connect sends no message, register is mid=1, photo is mid=2
-    if mid == 2:
+    # Disconnect only after the photo message has been published
+    if mid == photo_mid:
         print("Message published successfully!")
         print(f"\n✅ Device '{DEVICE_ID}' registered and photo sent!")
         print(f"   Topic: {PHOTO_TOPIC}")
@@ -132,4 +136,3 @@ try:
 except Exception as e:
     print(f"Connection failed: {e}")
     sys.exit(1)
-
