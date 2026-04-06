@@ -6,11 +6,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-interface ProtectedRouteProps {
-  authRequired: boolean;
-}
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ authRequired: _authRequired }) => {
+const ProtectedRoute: React.FC = () => {
   // TODO: Implement authentication checks
   // Currently bypassing all auth - allowing access to all routes
 
