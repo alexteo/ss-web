@@ -1,3 +1,5 @@
+![CI](https://github.com/alexteo/ss-web/actions/workflows/ci.yml/badge.svg)
+
 # Laborator 1: Captură și transmisie de imagini prin aplicație web
 
 ## Sisteme de Securitate - Proiect ss-web
